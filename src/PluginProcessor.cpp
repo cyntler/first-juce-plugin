@@ -59,12 +59,20 @@ void WtyczkaVSTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         const auto& message = metadata.getMessage();
         updateMidiDebugMessage (message);
 
+        if (message.isNoteOn())
+            setMidiNoteActive (message.getNoteNumber(), true);
+        else if (message.isNoteOff())
+            setMidiNoteActive (message.getNoteNumber(), false);
+
         // Nie podtrzymujemy nut sustain pedalem podczas podstawowych testow.
         if (message.isController() && message.getControllerNumber() == 64)
             continue;
 
         if (message.isAllNotesOff() || message.isAllSoundOff())
+        {
+            clearAllMidiNotes();
             synth.allNotesOff (message.getChannel(), true);
+        }
 
         filteredMidi.addEvent (message, metadata.samplePosition);
     }
@@ -95,6 +103,19 @@ juce::String WtyczkaVSTAudioProcessor::getLastMidiDebugMessage() const
         + " D2 " + juce::String (data2);
 }
 
+bool WtyczkaVSTAudioProcessor::isMidiNoteActive (int midiNoteNumber) const noexcept
+{
+    if (midiNoteNumber < 0 || midiNoteNumber > 127)
+        return false;
+
+    const std::uint64_t noteMask = std::uint64_t { 1 } << (midiNoteNumber % 64);
+
+    if (midiNoteNumber < 64)
+        return (activeMidiNotesLow.load() & noteMask) != 0;
+
+    return (activeMidiNotesHigh.load() & noteMask) != 0;
+}
+
 void WtyczkaVSTAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& message)
 {
     const auto* raw = message.getRawData();
@@ -108,6 +129,30 @@ void WtyczkaVSTAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& 
         lastMidiData2.store (raw[2]);
 
     lastMidiChannel.store (message.getChannel());
+}
+
+void WtyczkaVSTAudioProcessor::setMidiNoteActive (int midiNoteNumber, bool isActive) noexcept
+{
+    if (midiNoteNumber < 0 || midiNoteNumber > 127)
+        return;
+
+    const std::uint64_t noteMask = std::uint64_t { 1 } << (midiNoteNumber % 64);
+
+    if (midiNoteNumber < 64)
+    {
+        auto current = activeMidiNotesLow.load();
+        activeMidiNotesLow.store (isActive ? (current | noteMask) : (current & ~noteMask));
+        return;
+    }
+
+    auto current = activeMidiNotesHigh.load();
+    activeMidiNotesHigh.store (isActive ? (current | noteMask) : (current & ~noteMask));
+}
+
+void WtyczkaVSTAudioProcessor::clearAllMidiNotes() noexcept
+{
+    activeMidiNotesLow.store (0);
+    activeMidiNotesHigh.store (0);
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new WtyczkaVSTAudioProcessor(); }

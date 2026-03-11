@@ -34,7 +34,7 @@ Ten plik jest jedynym źródłem instrukcji dla agentów/modeli pracujących w t
   - `SineWaveVoice`
   - `WtyczkaVSTAudioProcessor`
 - `src/PluginEditor.h` i `src/PluginEditor.cpp`:
-  - `WtyczkaVSTAudioProcessorEditor` (UI 400x300, timer do odczytu informacji MIDI)
+  - `WtyczkaVSTAudioProcessorEditor` (UI min. 700x600, timer do odczytu informacji MIDI, wizualizacja klawiatury)
 
 ## Audio Thread Safety
 - `processBlock()` działa na wątku realtime audio.

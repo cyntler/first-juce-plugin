@@ -2,6 +2,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
+#include <cstdint>
 
 // --- Prosty dźwięk (Sound) dla syntezatora ---
 class SineWaveSound : public juce::SynthesiserSound
@@ -130,9 +131,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     juce::String getLastMidiDebugMessage() const;
+    bool isMidiNoteActive (int midiNoteNumber) const noexcept;
 
 private:
     void updateMidiDebugMessage (const juce::MidiMessage& message);
+    void setMidiNoteActive (int midiNoteNumber, bool isActive) noexcept;
+    void clearAllMidiNotes() noexcept;
 
     juce::Synthesiser synth;
     const int numVoices = 8;
@@ -140,6 +144,8 @@ private:
     std::atomic<int> lastMidiData1 { 0 };
     std::atomic<int> lastMidiData2 { 0 };
     std::atomic<int> lastMidiChannel { 0 };
+    std::atomic<std::uint64_t> activeMidiNotesLow { 0 };
+    std::atomic<std::uint64_t> activeMidiNotesHigh { 0 };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WtyczkaVSTAudioProcessor)
 };
