@@ -1,27 +1,27 @@
 # FirstJucePlugin
 
-Prosty syntezator MIDI oparty o JUCE i CMake (macOS).
+A simple MIDI synthesiser built with JUCE and CMake (macOS).
 
-## Co działa teraz
+## What works now
 
-- 8-głosowy syntezator sinus z ADSR
-- formaty: `VST3`, `AU`, `Standalone`
-- wizualizacja klawiatury MIDI w GUI
-- podświetlanie nut z wejścia MIDI
-- granie nuty myszką (`LPM`) na klawiaturze GUI
-- przewijanie klawiatury (drag + wheel)
+- 8-voice sine synthesiser with ADSR
+- formats: `VST3`, `AU`, `Standalone`
+- MIDI keyboard visualisation in the GUI
+- note highlighting from MIDI input
+- playing notes with the mouse (left click) on the GUI keyboard
+- keyboard scrolling (drag + wheel)
 
-## Wymagania
+## Requirements
 
 - macOS
 - CMake `3.22+`
-- kompilator z obsługą `C++17`
+- a compiler with `C++17` support
 
-JUCE (`8.0.12`) pobiera się automatycznie przez `FetchContent` w `CMakeLists.txt`.
+JUCE (`8.0.12`) is fetched automatically via `FetchContent` in `CMakeLists.txt`.
 
-## Szybki start
+## Quick start
 
-### Build Standalone (Debug)
+### Standalone build (Debug)
 
 ```bash
 ./scripts/dev-build.sh
@@ -39,33 +39,33 @@ JUCE (`8.0.12`) pobiera się automatycznie przez `FetchContent` w `CMakeLists.tx
 ./scripts/dev-debug.sh
 ```
 
-## Ręcznie przez CMake
+## Manual CMake build
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build --config Debug
 ```
 
-Artefakty znajdziesz w:
+Build artefacts can be found in:
 
 `build/FirstJucePlugin_artefacts/`
 
-## Struktura kodu
+## Code structure
 
-- `src/PluginProcessor.h`, `src/PluginProcessor.cpp` – synteza i obsługa MIDI
-- `src/PluginEditor.h`, `src/PluginEditor.cpp` – interfejs i klawiatura GUI
-- `AGENTS.md` – zasady pracy w repozytorium
+- `src/PluginProcessor.h`, `src/PluginProcessor.cpp` – synthesis and MIDI handling
+- `src/PluginEditor.h`, `src/PluginEditor.cpp` – interface and GUI keyboard
+- `AGENTS.md` – repository working guidelines
 
-## Uwaga o wątku audio
+## Audio thread note
 
-W `processBlock()` unikaj:
+Avoid the following in `processBlock()`:
 
-- alokacji pamięci
-- I/O plikowego
-- logowania do konsoli
-- blokad (`mutex`, locki)
+- memory allocations
+- file I/O
+- console logging
+- locks (`mutex`, etc.)
 
-## macOS: gdy host nie widzi zmian AU
+## macOS: when the host does not detect AU changes
 
 ```bash
 killall -9 AudioComponentRegistrar
