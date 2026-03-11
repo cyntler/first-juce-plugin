@@ -1,42 +1,73 @@
-# WtyczkaVST - Przewodnik Dewelopera
+# WtyczkaVST
 
-## Jak mądrze rozwijać wtyczkę?
+Prosty syntezator MIDI oparty o JUCE i CMake (macOS).
 
-Development wtyczek audio różni się od zwykłych aplikacji. Oto najlepsze praktyki:
+## Co działa teraz
 
-1. **Używaj "Audio Plugin Host":** Zamiast ładować Logic Pro za każdym razem, skompiluj i używaj `JUCE AudioPluginHost`. Jest lekki i pozwala na szybkie testowanie zmian w kodzie.
-2. **Format Standalone:** W fazie tworzenia UI, używaj formatu Standalone (aplikacja .app). Jest najszybszy w uruchamianiu.
-3. **Wątek Audio:** Pamiętaj, że `processBlock` działa w czasie rzeczywistym. Nigdy nie blokuj tego wątku (żadnych operacji na plikach, printów do konsoli czy alokacji pamięci).
+- 8-głosowy syntezator sinus z ADSR
+- formaty: `VST3`, `AU`, `Standalone`
+- wizualizacja klawiatury MIDI w GUI
+- podświetlanie nut z wejścia MIDI
+- granie nuty myszką (`LPM`) na klawiaturze GUI
+- przewijanie klawiatury (drag + wheel)
 
-## Debugowanie bezpośrednio w Logic Pro
+## Wymagania
 
-Jeśli musisz przetestować specyficzne zachowanie w Logic Pro, wykonaj poniższe kroki:
+- macOS
+- CMake `3.22+`
+- kompilator z obsługą `C++17`
 
-### 1. Przygotowanie Projektu
-Upewnij się, że budujesz projekt w trybie **Debug**:
+JUCE (`8.0.12`) pobiera się automatycznie przez `FetchContent` w `CMakeLists.txt`.
+
+## Szybki start
+
+### Build Standalone (Debug)
+
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Debug ..
-cmake --build .
+./scripts/dev-build.sh
 ```
 
-### 2. Podpięcie Debuggera (Xcode)
-Jeśli używasz Xcode (wygenerowanego przez CMake):
-1. Otwórz projekt w Xcode: `open WtyczkaVST.xcodeproj`.
-2. Uruchom **Logic Pro** normalnie.
-3. W Xcode wybierz z menu: **Debug > Attach to Process > Logic Pro**.
-4. Ustaw breakpointy w swoim kodzie (np. w `processBlock` lub `paint`).
-5. W Logic Pro załaduj swoją wtyczkę na ścieżkę audio. Xcode zatrzyma wykonywanie programu w momencie trafienia na breakpoint.
+### Watch / auto-rebuild
 
-### 3. Debugowanie bez Xcode (Terminal/LLDB)
-Jeśli wolisz terminal:
-1. Uruchom Logic Pro.
-2. W terminalu wpisz: `lldb -p $(pgrep -x "Logic Pro X")`.
-3. Wpisz `continue` (lub `c`), aby wznowić działanie Logic Pro.
+```bash
+./scripts/dev-watch.sh
+```
 
-## Czyszczenie Cache'u Wtyczek (macOS)
-Jeśli Logic Pro nie widzi zmian we wtyczce mimo jej przebudowania, wyczyść cache AU:
+### Build + debug (LLDB)
+
+```bash
+./scripts/dev-debug.sh
+```
+
+## Ręcznie przez CMake
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --config Debug
+```
+
+Artefakty znajdziesz w:
+
+`build/WtyczkaVST_artefacts/`
+
+## Struktura kodu
+
+- `src/PluginProcessor.h`, `src/PluginProcessor.cpp` – synteza i obsługa MIDI
+- `src/PluginEditor.h`, `src/PluginEditor.cpp` – interfejs i klawiatura GUI
+- `AGENTS.md` – zasady pracy w repozytorium
+
+## Uwaga o wątku audio
+
+W `processBlock()` unikaj:
+
+- alokacji pamięci
+- I/O plikowego
+- logowania do konsoli
+- blokad (`mutex`, locki)
+
+## macOS: gdy host nie widzi zmian AU
+
 ```bash
 killall -9 AudioComponentRegistrar
 rm ~/Library/Caches/com.apple.audiounits.cache
 ```
-Po tym zabiegu Logic Pro ponownie przeskanuje wszystkie wtyczki przy starcie.
