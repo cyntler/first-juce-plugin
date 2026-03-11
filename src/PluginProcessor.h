@@ -98,11 +98,11 @@ private:
 };
 
 // --- Główny Audio Processor ---
-class WtyczkaVSTAudioProcessor  : public juce::AudioProcessor
+class FirstJucePluginAudioProcessor  : public juce::AudioProcessor
 {
 public:
-    WtyczkaVSTAudioProcessor();
-    ~WtyczkaVSTAudioProcessor() override;
+    FirstJucePluginAudioProcessor();
+    ~FirstJucePluginAudioProcessor() override;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -149,5 +149,5 @@ private:
     std::atomic<std::uint64_t> activeMidiNotesHigh { 0 };
     std::atomic<juce::MidiKeyboardState*> editorKeyboardState { nullptr };
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WtyczkaVSTAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FirstJucePluginAudioProcessor)
 };

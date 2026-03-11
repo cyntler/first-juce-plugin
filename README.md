@@ -1,4 +1,4 @@
-# WtyczkaVST
+# FirstJucePlugin
 
 Prosty syntezator MIDI oparty o JUCE i CMake (macOS).
 
@@ -48,7 +48,7 @@ cmake --build build --config Debug
 
 Artefakty znajdziesz w:
 
-`build/WtyczkaVST_artefacts/`
+`build/FirstJucePlugin_artefacts/`
 
 ## Struktura kodu
 

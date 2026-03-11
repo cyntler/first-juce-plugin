@@ -8,7 +8,7 @@ Ten plik jest jedynym źródłem instrukcji dla agentów/modeli pracujących w t
 - W razie rozbieżności obowiązuje `AGENTS.md`.
 
 ## Project Context
-- Repozytorium: `wtyczka-vst`
+- Repozytorium: `first-juce-plugin`
 - Typ projektu: syntezator MIDI oparty o JUCE i CMake na macOS
 - Aktualny status:
   - 8-głosowy syntezator sinus z obwiednią ADSR
@@ -26,15 +26,15 @@ Ten plik jest jedynym źródłem instrukcji dla agentów/modeli pracujących w t
 - Manualnie:
   - `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug`
   - `cmake --build build --config Debug`
-- Artefakty: `build/WtyczkaVST_artefacts/`
+- Artefakty: `build/FirstJucePlugin_artefacts/`
 
 ## Code Map
 - `src/PluginProcessor.h` i `src/PluginProcessor.cpp`:
   - `SineWaveSound`
   - `SineWaveVoice`
-  - `WtyczkaVSTAudioProcessor`
+  - `FirstJucePluginAudioProcessor`
 - `src/PluginEditor.h` i `src/PluginEditor.cpp`:
-  - `WtyczkaVSTAudioProcessorEditor` (UI min. 700x600, timer do odczytu informacji MIDI, wizualizacja klawiatury)
+  - `FirstJucePluginAudioProcessorEditor` (UI min. 700x600, timer do odczytu informacji MIDI, wizualizacja klawiatury)
 
 ## Audio Thread Safety
 - `processBlock()` działa na wątku realtime audio.

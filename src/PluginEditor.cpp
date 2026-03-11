@@ -91,7 +91,7 @@ void KeyboardGestureOverlay::mouseWheelMove (const juce::MouseEvent& event, cons
     viewport.setViewPosition (viewport.getViewPositionX() - pixelDelta, 0);
 }
 
-WtyczkaVSTAudioProcessorEditor::WtyczkaVSTAudioProcessorEditor (WtyczkaVSTAudioProcessor& p)
+FirstJucePluginAudioProcessorEditor::FirstJucePluginAudioProcessorEditor (FirstJucePluginAudioProcessor& p)
     : AudioProcessorEditor (&p),
       audioProcessor (p),
       midiKeyboardComponent (midiKeyboardState),
@@ -115,21 +115,21 @@ WtyczkaVSTAudioProcessorEditor::WtyczkaVSTAudioProcessorEditor (WtyczkaVSTAudioP
     startTimerHz (20);
 }
 
-WtyczkaVSTAudioProcessorEditor::~WtyczkaVSTAudioProcessorEditor()
+FirstJucePluginAudioProcessorEditor::~FirstJucePluginAudioProcessorEditor()
 {
     audioProcessor.setEditorKeyboardState (nullptr);
 }
 
-void WtyczkaVSTAudioProcessorEditor::paint (juce::Graphics& g)
+void FirstJucePluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
     g.setColour (juce::Colours::white);
     g.setFont (24.0f);
-    g.drawFittedText ("Wtyczka VST - Setup JUCE", 20, 30, getWidth() - 40, 40, juce::Justification::centred, 1);
+    g.drawFittedText ("FirstJucePlugin - Setup JUCE", 20, 30, getWidth() - 40, 40, juce::Justification::centred, 1);
 }
 
-void WtyczkaVSTAudioProcessorEditor::resized()
+void FirstJucePluginAudioProcessorEditor::resized()
 {
     constexpr int keyboardHeight = 140;
     constexpr int keyboardDragHandleHeight = 18;
@@ -157,7 +157,7 @@ void WtyczkaVSTAudioProcessorEditor::resized()
     keyboardGestureOverlay.toFront (false);
 }
 
-void WtyczkaVSTAudioProcessorEditor::timerCallback()
+void FirstJucePluginAudioProcessorEditor::timerCallback()
 {
     midiDebugLabel.setText (audioProcessor.getLastMidiDebugMessage(), juce::dontSendNotification);
 }

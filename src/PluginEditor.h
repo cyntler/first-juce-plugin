@@ -40,12 +40,12 @@ private:
     float wheelPixelRemainder = 0.0f;
 };
 
-class WtyczkaVSTAudioProcessorEditor  : public juce::AudioProcessorEditor,
+class FirstJucePluginAudioProcessorEditor  : public juce::AudioProcessorEditor,
                                         private juce::Timer
 {
 public:
-    WtyczkaVSTAudioProcessorEditor (WtyczkaVSTAudioProcessor&);
-    ~WtyczkaVSTAudioProcessorEditor() override;
+    FirstJucePluginAudioProcessorEditor (FirstJucePluginAudioProcessor&);
+    ~FirstJucePluginAudioProcessorEditor() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
@@ -53,12 +53,12 @@ public:
 private:
     void timerCallback() override;
 
-    WtyczkaVSTAudioProcessor& audioProcessor;
+    FirstJucePluginAudioProcessor& audioProcessor;
     juce::Label midiDebugLabel;
     juce::MidiKeyboardState midiKeyboardState;
     ScrollableMidiKeyboardComponent midiKeyboardComponent;
     KeyboardPanViewport midiKeyboardViewport;
     KeyboardGestureOverlay keyboardGestureOverlay;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WtyczkaVSTAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FirstJucePluginAudioProcessorEditor)
 };

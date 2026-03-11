@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-WtyczkaVSTAudioProcessor::WtyczkaVSTAudioProcessor()
+FirstJucePluginAudioProcessor::FirstJucePluginAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                        )
@@ -14,30 +14,30 @@ WtyczkaVSTAudioProcessor::WtyczkaVSTAudioProcessor()
     synth.addSound (new SineWaveSound());
 }
 
-WtyczkaVSTAudioProcessor::~WtyczkaVSTAudioProcessor()
+FirstJucePluginAudioProcessor::~FirstJucePluginAudioProcessor()
 {
 }
 
-const juce::String WtyczkaVSTAudioProcessor::getName() const { return JucePlugin_Name; }
-bool WtyczkaVSTAudioProcessor::acceptsMidi() const { return true; }
-bool WtyczkaVSTAudioProcessor::producesMidi() const { return false; }
-bool WtyczkaVSTAudioProcessor::isMidiEffect() const { return false; }
-double WtyczkaVSTAudioProcessor::getTailLengthSeconds() const { return 0.0; }
-int WtyczkaVSTAudioProcessor::getNumPrograms() { return 1; }
-int WtyczkaVSTAudioProcessor::getCurrentProgram() { return 0; }
-void WtyczkaVSTAudioProcessor::setCurrentProgram (int index) {}
-const juce::String WtyczkaVSTAudioProcessor::getProgramName (int index) { return {}; }
-void WtyczkaVSTAudioProcessor::changeProgramName (int index, const juce::String& newName) {}
+const juce::String FirstJucePluginAudioProcessor::getName() const { return JucePlugin_Name; }
+bool FirstJucePluginAudioProcessor::acceptsMidi() const { return true; }
+bool FirstJucePluginAudioProcessor::producesMidi() const { return false; }
+bool FirstJucePluginAudioProcessor::isMidiEffect() const { return false; }
+double FirstJucePluginAudioProcessor::getTailLengthSeconds() const { return 0.0; }
+int FirstJucePluginAudioProcessor::getNumPrograms() { return 1; }
+int FirstJucePluginAudioProcessor::getCurrentProgram() { return 0; }
+void FirstJucePluginAudioProcessor::setCurrentProgram (int index) {}
+const juce::String FirstJucePluginAudioProcessor::getProgramName (int index) { return {}; }
+void FirstJucePluginAudioProcessor::changeProgramName (int index, const juce::String& newName) {}
 
-void WtyczkaVSTAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void FirstJucePluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Ustawiamy częstotliwość próbkowania dla syntezatora
     synth.setCurrentPlaybackSampleRate (sampleRate);
 }
 
-void WtyczkaVSTAudioProcessor::releaseResources() {}
+void FirstJucePluginAudioProcessor::releaseResources() {}
 
-bool WtyczkaVSTAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool FirstJucePluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
@@ -46,7 +46,7 @@ bool WtyczkaVSTAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     return true;
 }
 
-void WtyczkaVSTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void FirstJucePluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     // To jest synth bez wejscia audio, wiec kazdy blok musi zaczynac od czystego bufora.
@@ -84,13 +84,13 @@ void WtyczkaVSTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     synth.renderNextBlock (buffer, filteredMidi, 0, buffer.getNumSamples());
 }
 
-bool WtyczkaVSTAudioProcessor::hasEditor() const { return true; }
-juce::AudioProcessorEditor* WtyczkaVSTAudioProcessor::createEditor() { return new WtyczkaVSTAudioProcessorEditor (*this); }
+bool FirstJucePluginAudioProcessor::hasEditor() const { return true; }
+juce::AudioProcessorEditor* FirstJucePluginAudioProcessor::createEditor() { return new FirstJucePluginAudioProcessorEditor (*this); }
 
-void WtyczkaVSTAudioProcessor::getStateInformation (juce::MemoryBlock& destData) {}
-void WtyczkaVSTAudioProcessor::setStateInformation (const void* data, int sizeInBytes) {}
+void FirstJucePluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData) {}
+void FirstJucePluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes) {}
 
-juce::String WtyczkaVSTAudioProcessor::getLastMidiDebugMessage() const
+juce::String FirstJucePluginAudioProcessor::getLastMidiDebugMessage() const
 {
     const auto status = lastMidiStatusByte.load();
     const auto data1 = lastMidiData1.load();
@@ -106,7 +106,7 @@ juce::String WtyczkaVSTAudioProcessor::getLastMidiDebugMessage() const
         + " D2 " + juce::String (data2);
 }
 
-bool WtyczkaVSTAudioProcessor::isMidiNoteActive (int midiNoteNumber) const noexcept
+bool FirstJucePluginAudioProcessor::isMidiNoteActive (int midiNoteNumber) const noexcept
 {
     if (midiNoteNumber < 0 || midiNoteNumber > 127)
         return false;
@@ -119,12 +119,12 @@ bool WtyczkaVSTAudioProcessor::isMidiNoteActive (int midiNoteNumber) const noexc
     return (activeMidiNotesHigh.load() & noteMask) != 0;
 }
 
-void WtyczkaVSTAudioProcessor::setEditorKeyboardState (juce::MidiKeyboardState* keyboardState) noexcept
+void FirstJucePluginAudioProcessor::setEditorKeyboardState (juce::MidiKeyboardState* keyboardState) noexcept
 {
     editorKeyboardState.store (keyboardState);
 }
 
-void WtyczkaVSTAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& message)
+void FirstJucePluginAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& message)
 {
     const auto* raw = message.getRawData();
     const auto size = message.getRawDataSize();
@@ -139,7 +139,7 @@ void WtyczkaVSTAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& 
     lastMidiChannel.store (message.getChannel());
 }
 
-void WtyczkaVSTAudioProcessor::setMidiNoteActive (int midiNoteNumber, bool isActive) noexcept
+void FirstJucePluginAudioProcessor::setMidiNoteActive (int midiNoteNumber, bool isActive) noexcept
 {
     if (midiNoteNumber < 0 || midiNoteNumber > 127)
         return;
@@ -157,10 +157,10 @@ void WtyczkaVSTAudioProcessor::setMidiNoteActive (int midiNoteNumber, bool isAct
     activeMidiNotesHigh.store (isActive ? (current | noteMask) : (current & ~noteMask));
 }
 
-void WtyczkaVSTAudioProcessor::clearAllMidiNotes() noexcept
+void FirstJucePluginAudioProcessor::clearAllMidiNotes() noexcept
 {
     activeMidiNotesLow.store (0);
     activeMidiNotesHigh.store (0);
 }
 
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new WtyczkaVSTAudioProcessor(); }
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new FirstJucePluginAudioProcessor(); }

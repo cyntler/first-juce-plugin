@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="$ROOT_DIR/build"
 
 find_app() {
-  find "$BUILD_DIR" -path "*Standalone/*.app" -name "WtyczkaVST.app" | head -n 1
+  find "$BUILD_DIR" -path "*Standalone/*.app" -name "FirstJucePlugin.app" | head -n 1
 }
 
 "$ROOT_DIR/scripts/dev-build.sh"
@@ -16,4 +16,4 @@ if [[ -z "${APP_PATH}" ]]; then
   exit 1
 fi
 
-exec lldb "$APP_PATH/Contents/MacOS/WtyczkaVST"
+exec lldb "$APP_PATH/Contents/MacOS/FirstJucePlugin"
