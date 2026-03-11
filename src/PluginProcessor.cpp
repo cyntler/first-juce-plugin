@@ -57,24 +57,27 @@ void WtyczkaVSTAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     for (const auto metadata : midiMessages)
     {
         const auto& message = metadata.getMessage();
+        // Nie podtrzymujemy nut sustain pedalem podczas podstawowych testow.
+        if (message.isController() && message.getControllerNumber() == 64)
+            continue;
+
+        filteredMidi.addEvent (message, metadata.samplePosition);
+    }
+
+    if (auto* keyboardState = editorKeyboardState.load())
+        keyboardState->processNextMidiBuffer (filteredMidi, 0, buffer.getNumSamples(), true);
+
+    for (const auto metadata : filteredMidi)
+    {
+        const auto& message = metadata.getMessage();
         updateMidiDebugMessage (message);
 
         if (message.isNoteOn())
             setMidiNoteActive (message.getNoteNumber(), true);
         else if (message.isNoteOff())
             setMidiNoteActive (message.getNoteNumber(), false);
-
-        // Nie podtrzymujemy nut sustain pedalem podczas podstawowych testow.
-        if (message.isController() && message.getControllerNumber() == 64)
-            continue;
-
-        if (message.isAllNotesOff() || message.isAllSoundOff())
-        {
+        else if (message.isAllNotesOff() || message.isAllSoundOff())
             clearAllMidiNotes();
-            synth.allNotesOff (message.getChannel(), true);
-        }
-
-        filteredMidi.addEvent (message, metadata.samplePosition);
     }
 
     // Renderujemy dźwięk z syntezatora na podstawie komunikatów MIDI
@@ -114,6 +117,11 @@ bool WtyczkaVSTAudioProcessor::isMidiNoteActive (int midiNoteNumber) const noexc
         return (activeMidiNotesLow.load() & noteMask) != 0;
 
     return (activeMidiNotesHigh.load() & noteMask) != 0;
+}
+
+void WtyczkaVSTAudioProcessor::setEditorKeyboardState (juce::MidiKeyboardState* keyboardState) noexcept
+{
+    editorKeyboardState.store (keyboardState);
 }
 
 void WtyczkaVSTAudioProcessor::updateMidiDebugMessage (const juce::MidiMessage& message)

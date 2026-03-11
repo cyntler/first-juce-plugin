@@ -132,6 +132,7 @@ public:
 
     juce::String getLastMidiDebugMessage() const;
     bool isMidiNoteActive (int midiNoteNumber) const noexcept;
+    void setEditorKeyboardState (juce::MidiKeyboardState* keyboardState) noexcept;
 
 private:
     void updateMidiDebugMessage (const juce::MidiMessage& message);
@@ -146,6 +147,7 @@ private:
     std::atomic<int> lastMidiChannel { 0 };
     std::atomic<std::uint64_t> activeMidiNotesLow { 0 };
     std::atomic<std::uint64_t> activeMidiNotesHigh { 0 };
+    std::atomic<juce::MidiKeyboardState*> editorKeyboardState { nullptr };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WtyczkaVSTAudioProcessor)
 };

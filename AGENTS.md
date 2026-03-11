@@ -51,6 +51,8 @@ Ten plik jest jedynym źródłem instrukcji dla agentów/modeli pracujących w t
 - Nie modyfikuj niepowiązanych plików.
 - Używaj opisowych nazw i unikaj zbędnych zależności.
 - Komentarze dodawaj tylko tam, gdzie logika nie jest oczywista.
+- Zrób dobry research w Internecie jak się robi daną funkcjonalość zgodnie z dobrymi praktykami.
+- Gdy odczytasz od użytkownika informację, że rozwiązanie, które przygotowałeś działa dobrze. To zapytaj o wykonanie commita.
 
 ## Git Safety
 - Nie uruchamiaj destrukcyjnych komend git bez wyraźnej prośby użytkownika.
