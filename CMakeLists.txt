@@ -49,3 +49,39 @@ target_link_libraries(FirstJucePlugin PRIVATE
 )
 
 juce_generate_juce_header(FirstJucePlugin)
+
+# --- Unit Tests ---
+option(BUILD_TESTS "Build unit tests" ON)
+
+if(BUILD_TESTS)
+    enable_testing()
+
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v3.7.1
+    )
+    FetchContent_MakeAvailable(Catch2)
+
+    add_executable(FirstJucePluginTests
+        tests/PluginProcessorTests.cpp
+        tests/SineWaveSoundTests.cpp
+        tests/SineWaveVoiceTests.cpp
+    )
+
+    target_link_libraries(FirstJucePluginTests PRIVATE
+        FirstJucePlugin
+        Catch2::Catch2WithMain
+        juce::juce_audio_utils
+        juce::juce_audio_processors
+    )
+
+    target_compile_definitions(FirstJucePluginTests PRIVATE
+        JUCE_UNIT_TESTS=1
+    )
+
+    list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(FirstJucePluginTests)
+endif()
