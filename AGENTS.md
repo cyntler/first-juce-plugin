@@ -58,6 +58,13 @@ Ten plik jest jedynym źródłem instrukcji dla agentów/modeli pracujących w t
 - Nie uruchamiaj destrukcyjnych komend git bez wyraźnej prośby użytkownika.
 - Nie twórz commitów ani branchy bez wyraźnej prośby użytkownika.
 - Szanuj lokalne, niescommitowane zmiany użytkownika.
+- Pamiętaj, aby używać commit messages zgodnie ze skillem, ale treść ma być po angielsku.
+
+## Branch Workflow
+- **Każde nowe zadanie** zaczynaj od utworzenia nowego brancha z `main`.
+- Nazwa brancha musi odpowiadać konwencji podanej przez użytkownika w danym zadaniu.
+- Nie pushuj bezpośrednio na `main` — zmiany trafiają na `main` wyłącznie przez Pull Request.
+- Po zakończeniu pracy na branchu zaproponuj utworzenie PR.
 
 ## Testing and Validation
 - Najpierw uruchamiaj najmniejszy test/check związany ze zmianą.
